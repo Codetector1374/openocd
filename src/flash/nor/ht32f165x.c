@@ -134,10 +134,10 @@ static int ht32f165x_write(struct flash_bank *bank, const uint8_t *buffer,
 
     uint32_t addr = offset;
     for(uint32_t i = 0; i < count; i += 4){
-        uint32_t word = (buffer[i]   << 0) |
-                        (buffer[i+1] << 8) |
-                        (buffer[i+2] << 16) |
-                        (buffer[i+3] << 24);
+        uint32_t word = (((uint32_t)buffer[i+0]) <<  0U) |
+                        (((uint32_t)buffer[i+1]) <<  8U) |
+                        (((uint32_t)buffer[i+2]) << 16U) |
+                        (((uint32_t)buffer[i+3]) << 24U) ;
 
         LOG_DEBUG("ht32f165x flash write word 0x%x 0x%x 0x%08x", i, addr, word);
 
@@ -210,11 +210,13 @@ static int ht32f165x_protect_check(struct flash_bank *bank)
 
     LOG_INFO("ht32f165x opt byte: %04x %04x %04x %04x %04x", ob_pp[0], ob_pp[1], ob_pp[2], ob_pp[3], ob_cp);
 
-    // Set page protection
-    for(int i = 0 ; i < 128; ++i){
-        int bit = (ob_pp[i / 32] << (i % 32)) & 1;
-        bank->sectors[2*i].is_protected = bit ? 0 : 1;
-        bank->sectors[(2*i)+1].is_protected = bit ? 0 : 1;
+
+    for (size_t i = 0; i < (size_t)bank->num_sectors; ++i) {
+        size_t index = i / (sizeof(uint32_t) * 8); // Index into the ob_pp
+        size_t offset = i % (sizeof(uint32_t) * 8); // Offset
+        assert((index < 4) && "index out of bound. Only 128k flash should exist");
+        uint8_t is_protected = (ob_pp[index] & (1U << offset)) == 0;
+        bank->sectors[i].is_protected = is_protected;
     }
 
     return ERROR_OK;
