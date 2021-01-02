@@ -167,6 +167,8 @@ static int ht32f165x_write(struct flash_bank *bank, const uint8_t *buffer,
     return ERROR_OK;
 }
 
+static int ht32f165x_protect_check(struct flash_bank *bank);
+
 static int ht32f165x_probe(struct flash_bank *bank)
 {
     int page_size = 1024;
@@ -187,6 +189,8 @@ static int ht32f165x_probe(struct flash_bank *bank)
         bank->sectors[i].is_erased = -1;
         bank->sectors[i].is_protected = 1;
     }
+
+    ht32f165x_protect_check(bank);
 
     return ERROR_OK;
 }
@@ -224,11 +228,13 @@ static int ht32f165x_protect_check(struct flash_bank *bank)
 
 static int ht32f165x_info(struct flash_bank *bank, char *buf, int buf_size)
 {
+    ht32f165x_probe(bank);
+
     const char *info = "ht32f165x flash";
     const size_t info_len = strlen(info);
-    const int copy_size = MIN((int)info_len, buf_size);
+    const size_t copy_size = MIN((int)info_len + 1, buf_size);
     memcpy(buf, info, copy_size);
-    buf[buf_size - 1] = '\0';
+    buf[copy_size-1] = '\0';
     return ERROR_OK;
 }
 
