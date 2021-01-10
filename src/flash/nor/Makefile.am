@@ -56,6 +56,7 @@ NOR_DRIVERS = \
 	%D%/sfdp.c \
 	%D%/sh_qspi.c \
 	%D%/sim3x.c \
+	%D%/sn32f260.c \
 	%D%/spi.c \
 	%D%/stmsmi.c \
 	%D%/stmqspi.c \

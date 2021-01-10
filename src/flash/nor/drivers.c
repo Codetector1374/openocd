@@ -70,6 +70,7 @@ extern const struct flash_driver psoc6_flash;
 extern const struct flash_driver renesas_rpchf_flash;
 extern const struct flash_driver sh_qspi_flash;
 extern const struct flash_driver sim3x_flash;
+extern const struct flash_driver sn32f260_flash;
 extern const struct flash_driver stellaris_flash;
 extern const struct flash_driver stm32f1x_flash;
 extern const struct flash_driver stm32f2x_flash;
@@ -144,6 +145,7 @@ static const struct flash_driver * const flash_drivers[] = {
 	&renesas_rpchf_flash,
 	&sh_qspi_flash,
 	&sim3x_flash,
+	&sn32f260_flash,
 	&stellaris_flash,
 	&stm32f1x_flash,
 	&stm32f2x_flash,

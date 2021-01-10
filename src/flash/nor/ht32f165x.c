@@ -70,7 +70,7 @@ static int ht32f165x_wait_status_busy(struct flash_bank *bank, int timeout)
     return retval;
 }
 
-static int ht32f165x_erase(struct flash_bank *bank, int first, int last)
+static int ht32f165x_erase(struct flash_bank *bank, unsigned first, unsigned last)
 {
     struct target *target = bank->target;
 
@@ -81,7 +81,7 @@ static int ht32f165x_erase(struct flash_bank *bank, int first, int last)
         return ERROR_TARGET_NOT_HALTED;
     }
 
-    for(int i = first ; i <= last; ++i){
+    for(unsigned i = first ; i <= last; ++i){
         // flash memory page erase
         int retval = target_write_u32(target, FMC_REG_BASE + FMC_REG_TADR, bank->sectors[i].offset);
         if (retval != ERROR_OK)
@@ -105,7 +105,7 @@ static int ht32f165x_erase(struct flash_bank *bank, int first, int last)
     return ERROR_OK;
 }
 
-static int ht32f165x_protect(struct flash_bank *bank, int set, int first, int last)
+static int ht32f165x_protect(struct flash_bank *bank, int set, unsigned first, unsigned last)
 {
     return ERROR_FLASH_OPER_UNSUPPORTED;
 }
@@ -275,7 +275,7 @@ COMMAND_HANDLER(ht32f165x_handle_mass_erase_command)
     retval = ht32f165x_mass_erase(bank);
     if (retval == ERROR_OK) {
         // set all sectors as erased
-        int i;
+        unsigned i;
         for (i = 0; i < bank->num_sectors; i++)
             bank->sectors[i].is_erased = 1;
 
