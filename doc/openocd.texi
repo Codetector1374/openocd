@@ -7537,6 +7537,24 @@ flash bank $@{_FLASHNAME@}1 fm4 0x00100000 0 0 0 \
 nor is Chip Erase (only Sector Erase is implemented).}
 @end deffn
 
+@deffn {Flash Driver} {ht32f165x}
+The Holtek HT32F1653/54 microcontrollers include internal flash and use
+ARM Cortex-M3 cores. The @var{ht32f165x} driver supports main flash erase,
+write, and status reporting.
+
+@example
+flash bank $_FLASHNAME ht32f165x 0x00000000 $_FLASH_SIZE 0 0 $_TARGETNAME
+@end example
+
+The driver uses 1 KiB pages and 32-bit aligned word programming. Option-byte
+protection state is reported, but option-byte protection writes are not
+supported.
+
+@deffn {Command} {ht32f165x mass_erase} bank_id
+Erase all main flash pages in the bank.
+@end deffn
+@end deffn
+
 @deffn {Flash Driver} {kinetis}
 @cindex kinetis
 Several microcontrollers from NXP (former Freescale), including
